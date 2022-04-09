@@ -225,8 +225,27 @@ public class ListTester {
 		list.addToFront(ELEMENT_B);
 		return list;
 	}
+	
 	private Scenario<Integer> A_addToFrontB_BA = () -> A_addToFrontB_BA();
+	
+	// Scenario #10: [A] -> add(0,B) -> [B,A]
+	private IndexedUnsortedList<Integer> A_add0B_BA() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.add(ELEMENT_B);
 
+		return list;
+	}
+
+	private Scenario<Integer> A_add0B_BA = () -> A_add0B_BA();
+
+	//Scenario #12: [A] -> removeFirst() -> []
+	private IndexedUnsortedList<Integer> A_removeFirst() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A(); 
+		list.removeFirst();
+		return list;
+	}
+
+	private Scenario<Integer> A_removeFirst = () -> A_removeFirst();
 	/**
 	 * Scenario #14: [A] -> remove(A) -> []
 	 * @return [] after remove(A)
