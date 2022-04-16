@@ -243,6 +243,17 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> empty_addToRearA_A = () -> empty_addToRearA_A();
+	
+	/**
+	 * Scenario #4: [] -> [] -> add(A) -> [A]
+	 * @return [A] after add(A)
+	 */
+	private IndexedUnsortedList<Integer> empty_addA_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		return list;
+	}
+	private Scenario<Integer> empty_addA_A = () -> empty_addA_A();
 
 	/**
 	 * Scenario #7: [A] -> addToRear(B) -> [A,B]
@@ -287,6 +298,17 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> A_removeA_empty = () -> A_removeA_empty();
+	
+	/**
+	 * Scenario #15: [A] -> remove(0) -> []
+	 * @return [] after remove(A)
+	 */
+	private IndexedUnsortedList<Integer> A_remove0_empty() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A();
+		list.remove(0);
+		return list;
+	}
+	private Scenario<Integer> A_remove0_empty = () -> A_remove0_empty();
 
 	/**
 	 * Scenario #26: [A,B] -> removeLast() -> [A]
