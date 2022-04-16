@@ -172,9 +172,6 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
             throw new NoSuchElementException();
         }
 
-        System.out.println("REAR: " + rear + " :: AFTER MINUS 1: " + (rear-1));
-        System.out.println("NULL, BUT ITS THIS -> " + this.list[rear-1]);
-
         T result = this.list[rear-1];
 
         this.list[rear-1] = null;
