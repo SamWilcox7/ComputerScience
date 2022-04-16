@@ -198,9 +198,9 @@ public class ListTester {
 		case badList:
 			listToUse = new BadList<Integer>();
 			break;
-		// case arrayList:
-		// 	listToUse = new IUArrayList<Integer>();
-		// 	break;
+		case arrayList:
+			listToUse = new IUArrayList<Integer>();
+			break;
 		// case singleLinkedList:
 		// 	listToUse = new IUSingleLinkedList<Integer>();
 		// 	break;
@@ -513,7 +513,7 @@ public class ListTester {
 			printTest(scenarioName + "_testGetNeg1", testGet(scenario.build(), -1, null, Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testGet0", testGet(scenario.build(), 0, contents[0], Result.MatchingValue));
 			printTest(scenarioName + "_testGet1", testGet(scenario.build(), 1, contents[1], Result.MatchingValue));			
-			printTest(scenarioName + "_testGet2", testGet(scenario.build(), 2, contents[2], Result.IndexOutOfBounds));
+			printTest(scenarioName + "_testGet2", testGet(scenario.build(), 2, null, Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testIndexOf0" + contentsString.charAt(0), testIndexOf(scenario.build(), contents[0], 0));
 			printTest(scenarioName + "_testIndexOf1" + contentsString.charAt(1), testIndexOf(scenario.build(), contents[1], 1));
 			printTest(scenarioName + "_testIndexOfX", testIndexOf(scenario.build(), ELEMENT_X, -1));
@@ -521,8 +521,8 @@ public class ListTester {
 			printTest(scenarioName + "_testRemove0", testRemoveIndex(scenario.build(), 0, contents[0], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove1", testRemoveIndex(scenario.build(), 1, contents[1], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove2", testRemoveIndex(scenario.build(), 2, null, Result.IndexOutOfBounds));
-			printTest(scenarioName + "_testFirst" + contentsString.charAt(0), testFirst(scenario.build(), contents[0], Result.NoException));
-			printTest(scenarioName + "_testLast" + contentsString.charAt(1), testLast(scenario.build(), contents[1], Result.NoException));
+			printTest(scenarioName + "_testFirst" + contentsString.charAt(0), testFirst(scenario.build(), contents[0], Result.MatchingValue));
+			printTest(scenarioName + "_testLast" + contentsString.charAt(1), testLast(scenario.build(), contents[1], Result.MatchingValue));
 
 		} catch (Exception e) {
 			System.out.printf("***UNABLE TO RUN/COMPLETE %s***\n", scenarioName + " TESTS");
@@ -584,7 +584,7 @@ public class ListTester {
 			printTest(scenarioName + "_testGet0", testGet(scenario.build(), 0, contents[0], Result.MatchingValue));
 			printTest(scenarioName + "_testGet1", testGet(scenario.build(), 1, contents[1], Result.MatchingValue));			
 			printTest(scenarioName + "_testGet2", testGet(scenario.build(), 2, contents[2], Result.MatchingValue));
-			printTest(scenarioName + "_testGet3", testGet(scenario.build(), 3, contents[3], Result.IndexOutOfBounds));
+			printTest(scenarioName + "_testGet3", testGet(scenario.build(), 3, null, Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testIndexOf0" + contentsString.charAt(0), testIndexOf(scenario.build(), contents[0], 0));
 			printTest(scenarioName + "_testIndexOf1" + contentsString.charAt(1), testIndexOf(scenario.build(), contents[1], 1));
 			printTest(scenarioName + "_testIndexOf2" + contentsString.charAt(2), testIndexOf(scenario.build(), contents[2], 2));
@@ -594,8 +594,8 @@ public class ListTester {
 			printTest(scenarioName + "_testRemove1", testRemoveIndex(scenario.build(), 1, contents[1], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove2", testRemoveIndex(scenario.build(), 2, contents[2], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove3", testRemoveIndex(scenario.build(), 3, null, Result.IndexOutOfBounds));
-			printTest(scenarioName + "_testFirst" + contentsString.charAt(0), testFirst(scenario.build(), contents[0], Result.NoException));
-			printTest(scenarioName + "_testLast" + contentsString.charAt(1), testLast(scenario.build(), contents[1], Result.NoException));
+			printTest(scenarioName + "_testFirst" + contentsString.charAt(0), testFirst(scenario.build(), contents[0], Result.MatchingValue));
+			printTest(scenarioName + "_testLast" + contentsString.charAt(1), testLast(scenario.build(), contents[1], Result.MatchingValue));
 		} catch (Exception e) {
 			System.out.printf("***UNABLE TO RUN/COMPLETE %s***\n", scenarioName + " TESTS");
 			e.printStackTrace();

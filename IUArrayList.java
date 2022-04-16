@@ -59,8 +59,8 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
                 this.expandCapacity();
             }
 
-            for (int shift = rear-1; shift > 0; shift--) {
-                this.list[shift] = this.list[shift-1];
+            for (int shift = rear-1; shift >= 0; shift--) {
+                this.list[shift+1] = this.list[shift];
             }
 
             this.list[0] = element;
@@ -236,7 +236,7 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
         } else {
             T[] temp = (T[])(new Object[rear-1]);
 
-            for (int i = 0, j = 0; i < this.list.length; i++) {
+            for (int i = 0, j = 0; i < rear - 1; i++) {
                 if (i != index) {
                     temp[j++] = this.list[i];
                 }
