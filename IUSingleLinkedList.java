@@ -450,7 +450,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     }
 
     /**
-     * List iterator to assist in tranversing through the list
+     * Iterator to assist in tranversing through the list
      * @return  IUSingleLinkedListIterator
      */
     @Override
