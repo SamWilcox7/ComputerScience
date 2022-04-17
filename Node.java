@@ -1,15 +1,17 @@
 public class Node<T> {
     
     private Node<T> next;
+    private Node<T> previous;
     private T element;
 
     public Node() {
-        next = null;
+        next = previous = null;
         element = null;
     }
 
     public Node(T element) {
         next = null;
+        previous = null;
         this.element = element;
     }
 
@@ -17,8 +19,16 @@ public class Node<T> {
         return next;
     }
 
+    public Node<T> getPrevious() {
+        return previous;
+    }
+
     public void setNext(Node<T> node) {
         next = node;
+    }
+
+    public void setPrevious(Node<T> node) {
+        previous = node;
     }
 
     public T getElement() {

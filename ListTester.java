@@ -147,7 +147,7 @@ public class ListTester {
 
 		//newly constructed empty list
 		testEmptyList(newList, "newList");
-		testEmptyList(A_removeFirst, "A_removeFirst"); // Scenario #12
+		testEmptyList(A_removeFirst_empty, "A_removeFirst_empty"); // Scenario #12
 		testEmptyList(A_removeA_empty, "A_removeA_empty"); // Scenario #14
 		testEmptyList(A_remove0_empty, "A_remove0_empty"); // Scenario #15
 		//empty to 1-element list
@@ -204,9 +204,9 @@ public class ListTester {
 		// case singleLinkedList:
 		// 	listToUse = new IUSingleLinkedList<Integer>();
 		// 	break;
-//		case doubleLinkedList:
-//			listToUse = new IUDoubleLinkedList<Integer>();
-//			break;
+		// case doubleLinkedList:
+		// 	listToUse = new IUDoubleLinkedList<Integer>();
+		// 	break;
 		default:
 			listToUse = null;
 		}
@@ -286,12 +286,12 @@ public class ListTester {
 	 * Scenario #12: [A] -> removeFirst() -> []
 	 * @return [] after removeFirst()
 	 */
-	private IndexedUnsortedList<Integer> A_removeFirst() {
+	private IndexedUnsortedList<Integer> A_removeFirst_empty() {
 		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A();
 		list.removeFirst();
 		return list;
 	}
-	private Scenario<Integer> A_removeFirst = () -> A_removeFirst();
+	private Scenario<Integer> A_removeFirst_empty = () -> A_removeFirst_empty();
 
 	/**
 	 * Scenario #14: [A] -> remove(A) -> []
