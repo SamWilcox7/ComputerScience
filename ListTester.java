@@ -142,12 +142,15 @@ public class ListTester {
 		String STRING_B = "B";
 		Integer[] LIST_AB = {ELEMENT_A, ELEMENT_B};
 		Integer[] LIST_BA = {ELEMENT_B, ELEMENT_A};
+		Integer[] LIST_CAB = {ELEMENT_C, ELEMENT_A, ELEMENT_B};
 		String STRING_AB = "AB";
 		String STRING_BA = "BA";
+		String STRING_CAB = "CAB";
 
 		//newly constructed empty list
 		testEmptyList(newList, "newList");
 		testEmptyList(A_removeFirst_empty, "A_removeFirst_empty"); // Scenario #12
+		testEmptyList(A_removeLast_empty, "A_removeLast_empty"); // Scenario #13
 		testEmptyList(A_removeA_empty, "A_removeA_empty"); // Scenario #14
 		testEmptyList(A_remove0_empty, "A_remove0_empty"); // Scenario #15
 		//empty to 1-element list
@@ -157,6 +160,7 @@ public class ListTester {
 		testSingleElementList(emptyList_addAtIndex0A_A, "emptyList_addAtIndex0A_A", LIST_A, STRING_A); // Scenario #5
 		testSingleElementList(AB_removeFirst_B, "AB_removeFirst_B", LIST_B, STRING_B); // Scenario #25
 		testSingleElementList(AB_removeLast_A, "AB_removeLast_A", LIST_A, STRING_A); // Scenario #26
+		testSingleElementList(AB_removeB_A, "AB_removeB_A", LIST_A, STRING_A); // Scenario #28
 		//1-element to empty list
 		//1-element to 2-element
 		testTwoElementList(A_addToFrontB_BA, "A_addToFrontB_BA", LIST_BA, STRING_BA);
@@ -268,7 +272,7 @@ public class ListTester {
     	*/ 
     	private IndexedUnsortedList<Integer> emptyList_addAtIndex0A_A() {
         	IndexedUnsortedList<Integer> list = newList();
-        	list.addAtIndex(0, ELEMENT_A);
+        	list.add(0, ELEMENT_A);
         	return list;
     	}
     	private Scenario<Integer> emptyList_addAtIndex0A_A = () -> emptyList_addAtIndex0A_A();
@@ -307,6 +311,17 @@ public class ListTester {
 	private Scenario<Integer> A_removeFirst_empty = () -> A_removeFirst_empty();
 
 	/**
+	 * Scenario 13: [A] -> removeLast() -> []
+	 * @return [] after removeLast()
+	 */
+	private IndexedUnsortedList<Integer> A_removeLast_empty() {
+		IndexedUnsortedList<Integer> list = empty_addToRearA_A();
+		list.removeLast();
+		return list;
+	}
+	private Scenario<Integer> A_removeLast_empty = () -> A_removeLast_empty();
+
+	/**
 	 * Scenario #14: [A] -> remove(A) -> []
 	 * @return [] after remove(A)
 	 */
@@ -333,7 +348,7 @@ public class ListTester {
 	* @return [C,A,B] after addToFront(C)
     	*/ 
     	private IndexedUnsortedList<Integer> AB_addToFrontC_CAB() {
-        	IndexedUnsortedList<Integer> list = A_addB_AB();
+        	IndexedUnsortedList<Integer> list = A_addToRearB_AB();
         	list.addToFront(ELEMENT_C);
         	return list;
     	}
@@ -362,6 +377,20 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_removeLast_A = () -> AB_removeLast_A();
+
+	/**
+	 * Scnario 28: [A,B] -> remove(B) -> [A]
+	 * @return [A] after remove(B)
+	 */
+
+	private IndexedUnsortedList<Integer> AB_removeB_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.remove(ELEMENT_B);
+		return list;
+	}
+	private Scenario<Integer> AB_removeB_A = () -> AB_removeB_A();
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
@@ -584,7 +613,7 @@ public class ListTester {
 			printTest(scenarioName + "_testContains2" + contentsString.charAt(2), testContains(scenario.build(), contents[2], Result.True));
 			printTest(scenarioName + "_testContainsX", testContains(scenario.build(), ELEMENT_X, Result.False));
 			printTest(scenarioName + "_testIsEmpty", testIsEmpty(scenario.build(), Result.False));
-			printTest(scenarioName + "_testSize", testSize(scenario.build(), 2));
+			printTest(scenarioName + "_testSize", testSize(scenario.build(), 3));
 			printTest(scenarioName + "_testToString", testToString(scenario.build(), Result.ValidString));
 			printTest(scenarioName + "_testAddToFront", testAddToFront(scenario.build(), ELEMENT_X, Result.NoException));
 			printTest(scenarioName + "_testAddToRear", testAddToRear(scenario.build(), ELEMENT_X, Result.NoException));
@@ -619,7 +648,7 @@ public class ListTester {
 			printTest(scenarioName + "_testRemove2", testRemoveIndex(scenario.build(), 2, contents[2], Result.MatchingValue));
 			printTest(scenarioName + "_testRemove3", testRemoveIndex(scenario.build(), 3, null, Result.IndexOutOfBounds));
 			printTest(scenarioName + "_testFirst" + contentsString.charAt(0), testFirst(scenario.build(), contents[0], Result.MatchingValue));
-			printTest(scenarioName + "_testLast" + contentsString.charAt(1), testLast(scenario.build(), contents[1], Result.MatchingValue));
+			printTest(scenarioName + "_testLast" + contentsString.charAt(2), testLast(scenario.build(), contents[2], Result.MatchingValue));
 		} catch (Exception e) {
 			System.out.printf("***UNABLE TO RUN/COMPLETE %s***\n", scenarioName + " TESTS");
 			e.printStackTrace();
