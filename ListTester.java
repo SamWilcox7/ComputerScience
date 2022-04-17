@@ -154,6 +154,7 @@ public class ListTester {
 		testSingleElementList(emptyList_addToFrontA_A, "emptyList_addToFrontA_A", LIST_A, STRING_A); // Scenario #2
 		testSingleElementList(empty_addToRearA_A, "empty_addToRearA_A", LIST_A, STRING_A); // Scenario #3
 		testSingleElementList(empty_addA_A, "empty_addA_A", LIST_A, STRING_A); // Scenario #4
+		testSingleElementList(emptyList_addAtIndex0A_A, "emptyList_addAtIndex0A_A", LIST_A, STRING_A); // Scenario #5
 		testSingleElementList(AB_removeFirst_B, "AB_removeFirst_B", LIST_B, STRING_B); // Scenario #25
 		testSingleElementList(AB_removeLast_A, "AB_removeLast_A", LIST_A, STRING_A); // Scenario #26
 		//1-element to empty list
@@ -164,6 +165,7 @@ public class ListTester {
 		//1-element to changed 1-element via set()
 		//2-element to 1-element
 		//2-element to 3-element
+		testThreeElementList(AB_addToFrontC_CAB, "AB_addToFrontC_CAB", LIST_CAB, STRING_CAB); // Scenario #17
 		//2-element to changed 2-element via set()
 		//3-element to 2-element
 		//3-element to changed 3-element via set()
@@ -259,6 +261,17 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> empty_addA_A = () -> empty_addA_A();
+	
+	/**
+	* Scenario #5: [] -> addAtIndex(0, A) -> [A]
+	* @return [A] after addAtIndex(0, A)
+    	*/ 
+    	private IndexedUnsortedList<Integer> emptyList_addAtIndex0A_A() {
+        	IndexedUnsortedList<Integer> list = newList();
+        	list.addAtIndex(0, ELEMENT_A);
+        	return list;
+    	}
+    	private Scenario<Integer> emptyList_addAtIndex0A_A = () -> emptyList_addAtIndex0A_A();
 
 	/**
 	 * Scenario #7: [A] -> addToRear(B) -> [A,B]
@@ -314,6 +327,17 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> A_remove0_empty = () -> A_remove0_empty();
+	
+	/**
+	* Scenario #17: [A,B] -> addToFront(C) -> [C,A,B]
+	* @return [C,A,B] after addToFront(C)
+    	*/ 
+    	private IndexedUnsortedList<Integer> AB_addToFrontC_CAB() {
+        	IndexedUnsortedList<Integer> list = A_addB_AB();
+        	list.addToFront(ELEMENT_C);
+        	return list;
+    	}
+    	private Scenario<Integer> AB_addToFrontC_CAB = () -> AB_addToFrontC_CAB();
 
 	/**
 	* Scenario # 25: [A,B] -> removeFirst() -> [B]
