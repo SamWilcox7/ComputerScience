@@ -473,9 +473,244 @@ public class IUArrayList<T> implements IndexedUnsortedList<T> {
         }
     }
 
+    /**
+     * List iterator to help transverse through the list
+     * @return  ListIterator<T>
+     */
     @Override
     public ListIterator<T> listIterator() {
-        throw new UnsupportedOperationException();
+        return new IUArrayListListIterator(this);
+    }
+
+    /**
+     * List iterator various states enumerator
+     * NEXT = can remove on next
+     * PREVIOUS = can remove on previous
+     * NEITHER = cannot remove
+     */
+    public enum ListIteratorState { PREVIOUS, NEXT, NEITHER }
+
+    /**
+     * Array cursor class to help abstract out the cursor actions
+     */
+    public class ArrayCursor {
+        
+        /**
+         * Next and previous index integers
+         * @var int
+         */
+        private int previousIndex, nextIndex;
+
+        /**
+         * Class constructor
+         */
+        public ArrayCursor() {
+            previousIndex = -1;
+            nextIndex = 0;
+        }
+
+        /**
+         * Returns the next index property value
+         * @return int
+         */
+        public int getNextIndex() {
+            return nextIndex;
+        }
+
+        /**
+         * Returns the previous index property value
+         * @return int
+         */
+        public int getPreviousIndex() {
+            return previousIndex;
+        }
+
+        /**
+         * Shifts the cursor one index to the right
+         */
+        public void shiftRight() {
+            if (nextIndex < rear) {
+                previousIndex++;
+                nextIndex++;
+            }
+        }
+
+        /**
+         * Shifts the cursor one index to the left
+         */
+        public void shiftLeft() {
+            if (previousIndex > 0) {
+                previousIndex--;
+                nextIndex--;
+            }
+        }
+    }
+
+    /**
+     * List iterator for help traversing through the list using both next and previous abilities
+     */
+    private class IUArrayListListIterator implements ListIterator<T> {
+
+        /**
+         * Array cursor instance
+         * @var ArrayCursor
+         */
+        private ArrayCursor cursor;
+
+        /**
+         * List iterator modification counter
+         * @var int
+         */
+        private int listIterModCount;
+
+        /**
+         * List iterator state enumeration
+         * @var ListIteratorState
+         */
+        private ListIteratorState state;
+
+        /**
+         * Instance of the parent "outer" class
+         * @var IUArrayList<T>
+         */
+        private IUArrayList<T> outer;
+
+        /**
+         * Class constructor
+         */
+        public IUArrayListListIterator(IUArrayList<T> outer) {
+            cursor = new ArrayCursor();
+            listIterModCount = modCount;
+            state = ListIteratorState.NEITHER;
+            this.outer = outer;
+        }
+
+        /**
+         * Returns whether the list has another element
+         * @throws  ConcurrentModificationException thrown if the list has been modified while list iterator is executing
+         * @return  bool    true if another element exists, false if another element does not exist
+         */
+        @Override
+        public boolean hasNext() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            return cursor.getNextIndex() < rear;
+        }
+
+        /**
+         * Returns whether the list has a previous element
+         * @throws  ConcurrentModificationException thrown if the list has been modified while list iterator is executing
+         * @return  bool    true if a previous element exists, false if a previous element does not exist
+         */
+        @Override
+        public boolean hasPrevious() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            return cursor.getPreviousIndex() > -1;
+        }
+
+        /**
+         * Returns the next element in the list
+         * @throws  NoSuchElementException  thrown if the list does not have a next element available
+         * @return  T   the next element
+         */
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            T item = list[cursor.getNextIndex()];
+            cursor.shiftRight();
+            state = ListIteratorState.NEXT;
+            return item;
+        }
+
+        /**
+         * Returns the next index in the list
+         * @return  int
+         */
+        @Override
+        public int nextIndex() {
+            return cursor.getNextIndex();
+        }
+
+        /**
+         * Returns the previous element in the list
+         * @throws  NoSuchElementException  thrown if the list does not have a previous element available
+         * @return  T   the previous element
+         */
+        @Override
+        public T previous() {
+            if (!hasPrevious()) {
+                throw new NoSuchElementException();
+            }
+
+            T item = list[cursor.getPreviousIndex()];
+            cursor.shiftLeft();
+            state = ListIteratorState.PREVIOUS;
+            return item;
+        }
+
+        /**
+         * Returns the previous index in the list
+         * @return  int
+         */
+        @Override
+        public int previousIndex() {
+            return cursor.getPreviousIndex();
+        }
+
+        /**
+         * Removes either the previous or next element dependent upon which action was previously taken
+         * on the iterator
+         * @throws  ConcurrentModificationException thrown if the list was modified during the list iterator execution
+         * @throws  IllegalStateException           thrown if the state enumeration is equal to NEITHER state
+         */
+        @Override
+        public void remove() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            switch (state) {
+                case NEXT:
+                    outer.remove(cursor.getPreviousIndex());
+                    rear--;
+                    listIterModCount++;
+                    cursor.shiftLeft();
+                    state = ListIteratorState.NEITHER;
+                    break;
+                case PREVIOUS:
+                    outer.remove(cursor.getNextIndex());
+                    rear--;
+                    listIterModCount++;
+                    state = ListIteratorState.NEITHER;
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
+        }
+
+        /**
+         * 
+         */
+        @Override
+        public void add(T e) {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public void set(T element) {
+            // TODO Auto-generated method stub
+            
+        }
+        
     }
 
     @Override
