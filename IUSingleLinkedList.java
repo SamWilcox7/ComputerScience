@@ -133,18 +133,12 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             Node<T> current = head;
             Node<T> newNode = new Node<T>(element);
 
-            for (int i = 0; i < index; i++) {
-                if (current != null) {
-                    current = current.getNext();
-                }
+            for (int i = 0; i < index - 1; i++) {
+                current = current.getNext();
             }
 
-            if (current != null) {
-                newNode.setNext(current.getNext());
-                current.setNext(newNode);
-            } else {
-                throw new IndexOutOfBoundsException();
-            }
+            newNode.setNext(current.getNext());
+            current.setNext(newNode);
 
             modCount++;
             count++;
@@ -215,32 +209,43 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
      */
     @Override
     public T remove(T element) {
-        if (this.isEmpty() || (int)element < 0) {
+        if (this.isEmpty()) {
             throw new NoSuchElementException();
         }
 
         T result = null;
+        Node<T> current = head;
 
         if (head.getNext() == null) {
-            result = head.getElement();
-            head = null;
-            tail = null;
+            if (head.getElement().equals(element)) {
+                result = head.getElement();
+                head = tail = null;
+            }
         } else {
-            Node<T> builder = new Node<T>(element);
-            Node<T> current = head;
+            Node<T> previous = null;
 
             while (current != null) {
                 if (current.getElement().equals(element)) {
-                    result = current.getElement();
-                } else {
-                    builder.setNext(current);
-                    builder = builder.getNext();
+                    break;
                 }
 
+                previous = current;
                 current = current.getNext();
             }
 
-            head = builder;
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
+
+            result = current.getElement();
+
+            if (previous != null) {
+                current = previous.getNext();
+                previous.setNext(current.getNext());
+                current.setNext(null);
+            } else {
+                current = current.getNext();
+            }
         }
 
         if (result == null) {
@@ -266,21 +271,27 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         }
 
         T result = null;
-        Node<T> current = head;
-        Node<T> previous = head;
 
-        for (int i = 0; i < count; i++) {
-            if (i == index) {
-                result = current.getElement();
-                if (current.getNext() != null) {
-                    previous.setNext(current.getNext());
+        if (head.getNext() == null) {
+            result = head.getElement();
+            head = tail = null;
+        } else {
+            Node<T> current = head;
+            Node<T> previous = head;
+
+            for (int i = 0; i < count; i++) {
+                if (i == index) {
+                    result = current.getElement();
+                    if (current.getNext() != null) {
+                        previous.setNext(current.getNext());
+                    }
+                    break;
+                } else {
+                    previous = current;
                 }
-                break;
-            } else {
-                previous = current;
-            }
 
-            current = current.getNext();
+                current = current.getNext();
+            }   
         }
 
         modCount++;

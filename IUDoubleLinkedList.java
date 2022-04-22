@@ -177,9 +177,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             tail = null;
         } else {
             result = head.getElement();
-            Node<T> current = head.getNext();
-            current.setPrevious(null);
-            head = current;
+            head = head.getNext();
         }
 
         count--;
