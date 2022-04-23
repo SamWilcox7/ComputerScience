@@ -177,7 +177,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             tail = null;
         } else {
             result = head.getElement();
-            head = head.getNext();
+            Node<T> current = head.getNext();
+            current.setPrevious(null);
+            head = current;
         }
 
         count--;
@@ -241,6 +243,8 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             result = head.getElement();
             head = null;
             tail = null;
+            count--;
+            modCount++;
         } else {
             Node<T> current = head;
             
@@ -258,6 +262,8 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 if (current.getNext() == null) {
                     head = null;
                     tail = null;
+                    count--;
+                    modCount++;
                 } else {
                     removeFirst();
                 }
@@ -266,24 +272,21 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 Node<T> nextNode = null;
 
                 if (current.getNext() == null) {
-                    previousNode = current.getPrevious();
-                    nextNode = current;
+                    removeLast();
                 } else {
                     previousNode = current.getPrevious();
                     nextNode = current.getNext();
+                    previousNode.setNext(nextNode);
+                    nextNode.setPrevious(previousNode);
+                    count--;
+                    modCount++;
                 }
-
-                previousNode.setNext(nextNode);
-                nextNode.setPrevious(previousNode);
             }
         }
 
         if (result == null) {
             throw new NoSuchElementException();
         }
-
-        count--;
-        modCount++;
 
         return result;
     }
@@ -599,14 +602,310 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         }
     }
 
+    /**
+     * Returns an instance of the list iterator
+     */
     @Override
     public ListIterator<T> listIterator() {
-        throw new UnsupportedOperationException();
+        return new IUDoubleLinkedListListIterator(this);
     }
 
+    /**
+     * Returns an instance of the list iterator
+     * @param   int     custom starting index to start iterator at
+     */
     @Override
     public ListIterator<T> listIterator(int startingIndex) {
-        throw new UnsupportedOperationException();
+        return new IUDoubleLinkedListListIterator(startingIndex, this);
+    }
+
+    /**
+     * Enumeration of various list iterator states
+     */
+    private enum ListIteratorState { PREVIOUS, NEXT, NEITHER }
+
+    /**
+     * Array Cursor class to help assist tracking the current position in the list
+     */
+    private class ArrayCursor {
+        
+        /**
+         * Previous and next index values
+         * @var int
+         */
+        private int previousIndex, nextIndex;
+
+        /**
+         * Class constructor
+         */
+        public ArrayCursor() {
+            previousIndex = -1;
+            nextIndex = 0;
+        }
+
+        /**
+         * Returns the next index within the cursor
+         * @return  int  the next index
+         */
+        public int getNextIndex() {
+            return nextIndex;
+        }
+
+        /**
+         * Returns the previous index within the cursor
+         * @return  int  the previous index
+         */
+        public int getPreviousIndex() {
+            return previousIndex;
+        }
+
+        /**
+         * Shifts the cursor one element to the right
+         */
+        public void shiftRight() {
+            if (nextIndex < count) {
+                previousIndex++;
+                nextIndex++;
+            }
+        }
+
+        /**
+         * Shifts the cursor one element to the left
+         */
+        private void shiftLeft() {
+            if (previousIndex > 0) {
+                previousIndex--;
+                nextIndex--;
+            }
+        }
+    }
+
+    /**
+     * List iterator class implementation
+     */
+    private class IUDoubleLinkedListListIterator implements ListIterator<T> {
+
+        /**
+         * Instance of array cursor
+         * @var ArrayCursor
+         */
+        private ArrayCursor cursor;
+
+        /**
+         * List iterator modification counter
+         * @var int
+         */
+        private int listIterModCount;
+
+        /**
+         * Holds the current list iterator state we are in
+         * @var ListIteratorState
+         */
+        private ListIteratorState state;
+
+        /**
+         * Instance of the parent "outer" class
+         * @var IUDoubleLinkedList<T>
+         */
+        private IUDoubleLinkedList<T> outer;
+
+        /**
+         * Class constructor
+         * @param outer instance to the parent "outer" class
+         */
+        public IUDoubleLinkedListListIterator(IUDoubleLinkedList<T> outer) {
+            this(0, outer);
+        }
+
+        /**
+         * Class constructor
+         * @param startingIndex index in which to start iteration on
+         * @param outer         instance to the parent "outer" class
+         */
+        public IUDoubleLinkedListListIterator(int startingIndex, IUDoubleLinkedList<T> outer) {
+            cursor = new ArrayCursor();
+            listIterModCount = modCount;
+            state = ListIteratorState.NEITHER;
+            this.outer = outer;
+
+            if (startingIndex < 0 || startingIndex > count) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (startingIndex > 0) {
+                for (int i = 0; i < startingIndex; i++) {
+                    cursor.shiftRight();
+                }
+            }
+        }
+
+        /**
+         * Returns whether there is another element in the list at the current
+         * iteration point we are at
+         * @return  boolean     true if a next element exists, false otherwise
+         */
+        @Override
+        public boolean hasNext() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            state = ListIteratorState.NEITHER;
+
+            return cursor.getNextIndex() < count;
+        }
+
+        /**
+         * Returns whether there is a previous element in the list at the current
+         * iteration point we are at
+         * @return  boolean     true if a previous element exists, false otherwise
+         */
+        @Override
+        public boolean hasPrevious() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            state = ListIteratorState.NEITHER;
+
+            return cursor.getPreviousIndex() > -1;
+        }
+
+        /**
+         * Returns the next element in the list at the current iteration point
+         * @return  T   next element in the iteration
+         */
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            T item = outer.get(cursor.getNextIndex());
+            cursor.shiftRight();
+            state = ListIteratorState.NEXT;
+            
+            return item;
+        }
+
+        /**
+         * Returns the previous element in the list at the current iteration point
+         * @return  T   previous element in the list
+         */
+        @Override
+        public T previous() {
+            if (!hasPrevious()) {
+                throw new NoSuchElementException();
+            }
+
+            T item = outer.get(cursor.getPreviousIndex());
+            cursor.shiftLeft();
+            state = ListIteratorState.PREVIOUS;
+
+            return item;
+        }
+
+        /**
+         * Returns the next index in the iteration
+         * @return  int     next index in the iteration
+         */
+        @Override
+        public int nextIndex() {
+            return cursor.getNextIndex();
+        }
+
+        /**
+         * Returns the previous index in the iteration
+         * @return  int     previous index in the iteration
+         */
+        @Override
+        public int previousIndex() {
+            return cursor.getPreviousIndex();
+        }
+
+        /**
+         * Removes an node from the list at the current iteration point
+         */
+        @Override
+        public void remove() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }            
+
+            switch (state) {
+                case NEXT:
+                    outer.remove(cursor.getPreviousIndex());
+                    count--;
+                    listIterModCount++;
+                    cursor.shiftLeft();
+                    state = ListIteratorState.NEITHER;
+                    break;
+                case PREVIOUS:
+                    outer.remove(cursor.getNextIndex());
+                    count--;
+                    listIterModCount++;
+                    state = ListIteratorState.NEITHER;
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
+        }
+
+        /**
+         * Overrides the current node in the iteration with a new element
+         * @param   T   element to override current element with
+         */
+        @Override
+        public void set(T element) {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            switch (state) {
+                case NEXT:
+                    outer.set(cursor.getPreviousIndex(), element);
+                    listIterModCount++;
+                    cursor.shiftLeft();
+                    state = ListIteratorState.NEITHER;
+                    break;
+                case PREVIOUS:
+                    outer.set(cursor.getNextIndex(), element);
+                    listIterModCount++;
+                    state = ListIteratorState.NEITHER;
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
+        }
+        
+        /**
+         * Adds an element to the list at the current iteration
+         * @param   T   element to add to the list
+         */
+        @Override
+        public void add(T element) {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
+            switch (state) {
+                case NEXT:
+                    outer.add(cursor.getPreviousIndex(), element);
+                    count++;
+                    listIterModCount++;
+                    cursor.shiftLeft();
+                    state = ListIteratorState.NEITHER;
+                    break;
+                case PREVIOUS:
+                    outer.add(cursor.getNextIndex(), element);
+                    count++;
+                    listIterModCount++;
+                    state = ListIteratorState.NEITHER;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     
     /**
