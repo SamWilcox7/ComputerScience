@@ -168,6 +168,8 @@ public class ListTester {
 		testTwoElementList(A_add0B_BA, "A_add0B_BA", LIST_BA, STRING_BA); // Scenario #10
 		//1-element to changed 1-element via set()
 		//2-element to 1-element
+		testSingleElementList(AB_remove0_B, "AB_remove0_B", LIST_B, STRING_B); //Scenario #29
+		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A); //Scenario #30
 		//2-element to 3-element
 		testThreeElementList(AB_addToFrontC_CAB, "AB_addToFrontC_CAB", LIST_CAB, STRING_CAB); // Scenario #17
 		//2-element to changed 2-element via set()
@@ -391,6 +393,32 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_removeB_A = () -> AB_removeB_A();
+	
+	/**
+	 * Scenario #29: [A,B] -> remove(0) -> [B]
+	 * @return [B] after remove(0)
+	 */
+	private IndexedUnsortedList<Integer> AB_remove0_B() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.remove(0);
+		return list;
+	}
+	private Scenario<Integer> AB_remove0_B = () -> AB_remove0_B();
+
+	/**
+	 * Scenario #30: [A,B] -> remove(1) -> [A]
+	 * @return [A] after remove(1)
+	 */
+	private IndexedUnsortedList<Integer> AB_remove1_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.remove(1);
+		return list;
+	}
+	private Scenario<Integer> AB_remove1_A = () -> AB_remove1_A();
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
