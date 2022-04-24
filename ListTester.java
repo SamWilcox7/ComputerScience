@@ -411,6 +411,19 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_removeLast_A = () -> AB_removeLast_A();
+	
+	/** Scenario #27: [A,B] -> remove(A) -> [B]
+	* @return [B] after remove(A)
+	*/
+	
+	private IndexedUnsortedList<Integer> AB_remove_B() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.addToFront(ELEMENT_A);
+		list.addToRear(ELEMENT_B);
+		list.remove(A);
+		return list;
+	}
+	private Scenario<Integer>AB_remove_B = () -> AB_remove_B();
 
 	/**
 	 * Scnario 28: [A,B] -> remove(B) -> [A]
