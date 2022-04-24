@@ -19,7 +19,7 @@ public class ListTester {
 		goodList, badList, arrayList, singleLinkedList, doubleLinkedList
 	};
 	// TODO: THIS IS WHERE YOU CHOOSE WHICH LIST TO TEST
-	private final static ListToUse LIST_TO_USE = ListToUse.arrayList;
+	private final static ListToUse LIST_TO_USE = ListToUse.singleLinkedList;
 
 	// possible results expected in tests
 	private enum Result {
@@ -167,6 +167,7 @@ public class ListTester {
 		testTwoElementList(A_addToRearB_AB, "A_addToRearB_AB", LIST_AB, STRING_AB); // Scenario #7
 		testTwoElementList(A_add0B_BA, "A_add0B_BA", LIST_BA, STRING_BA); // Scenario #10
 		//1-element to changed 1-element via set()
+		testSingleElementList(A_add0B_B, "A_add0B_B()", LIST_B, STRING_B); // Scenario #16
 		//2-element to 1-element
 		testSingleElementList(AB_remove0_B, "AB_remove0_B", LIST_B, STRING_B); //Scenario #29
 		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A); //Scenario #30
@@ -174,6 +175,7 @@ public class ListTester {
 		testThreeElementList(AB_addToFrontC_CAB, "AB_addToFrontC_CAB", LIST_CAB, STRING_CAB); // Scenario #17
 		//2-element to changed 2-element via set()
 		//3-element to 2-element
+		testTwoElementList(ABC_removeC_AB, "ABC_removeC_AB", LIST_AB, STRING_AB); // Scenario #37
 		//3-element to changed 3-element via set()
 		//Iterator concurrency tests
 		// test_IterConcurrency();
@@ -209,9 +211,9 @@ public class ListTester {
 		case arrayList:
 			listToUse = new IUArrayList<Integer>();
 			break;
-		// case singleLinkedList:
-		// 	listToUse = new IUSingleLinkedList<Integer>();
-		// 	break;
+		case singleLinkedList:
+			listToUse = new IUSingleLinkedList<Integer>();
+			break;
 		// case doubleLinkedList:
 		// 	listToUse = new IUDoubleLinkedList<Integer>();
 		// 	break;
@@ -344,6 +346,19 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> A_remove0_empty = () -> A_remove0_empty();
+
+	/**
+	* Scenario #16: [A] -> set(0, B) -> [B]
+	* @return [B] after set(0, B)
+	*/
+	private IndexedUnsortedList<Integer> A_add0B_B() {
+		IndexedUnsortedList<Integer> list = emptyList_addToFrontA_A();
+		list.set(0, ELEMENT_B);
+		return list;
+		}
+	
+	private Scenario<Integer> A_add0B_B = () -> A_add0B_B();
+	
 	
 	/**
 	* Scenario #17: [A,B] -> addToFront(C) -> [C,A,B]
@@ -419,6 +434,21 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_remove1_A = () -> AB_remove1_A();
+
+	/**
+	* Scenario 37: [A,B,C] -> remove(C) -> [A,B]
+	* @return [A,B,C] after remove(C)
+	*/
+	private IndexedUnsortedList<Integer> ABC_removeC_AB() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.addToFront(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.addToRear(ELEMENT_C);
+		list.remove(ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> ABC_removeC_AB = () -> ABC_removeC_AB();
+	
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list

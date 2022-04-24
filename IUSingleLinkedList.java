@@ -157,9 +157,15 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         }
 
         T result = head.getElement();
-        Node<T> current = head;
-        current = head.getNext();
-        head = current;
+
+        if (head.getNext() == null) {
+            head = tail = null;
+        } else {
+            Node<T> current = head;
+            current = head.getNext();
+            head = current;
+        }
+
         modCount++;
         count--;
         return result;
