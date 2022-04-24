@@ -142,10 +142,14 @@ public class ListTester {
 		String STRING_B = "B";
 		Integer[] LIST_AB = {ELEMENT_A, ELEMENT_B};
 		Integer[] LIST_BA = {ELEMENT_B, ELEMENT_A};
+		Integer[] LIST_BC = {ELEMENT_B, ELEMENT_C};
 		Integer[] LIST_CAB = {ELEMENT_C, ELEMENT_A, ELEMENT_B};
+		Integer[] LIST_ACB = {ELEMENT_A, ELEMENT_C, ELEMENT_B};
 		String STRING_AB = "AB";
 		String STRING_BA = "BA";
+		String STRING_BC = "BC";
 		String STRING_CAB = "CAB";
+		String STRING_ACB = "ACB";
 
 		//newly constructed empty list
 		testEmptyList(newList, "newList");
@@ -173,8 +177,10 @@ public class ListTester {
 		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A); //Scenario #30
 		//2-element to 3-element
 		testThreeElementList(AB_addToFrontC_CAB, "AB_addToFrontC_CAB", LIST_CAB, STRING_CAB); // Scenario #17
+		testThreeElementList(AB_add1C_ACB, "AB_add1C_ACB", LIST_ACB, STRING_ACB); // Scenario #23
 		//2-element to changed 2-element via set()
 		//3-element to 2-element
+		testTwoElementList(ABC_removeFirst_BC, "ABC_removeFirst_BC", LIST_BC, STRING_BC); // Scenario #33
 		testTwoElementList(ABC_removeC_AB, "ABC_removeC_AB", LIST_AB, STRING_AB); // Scenario #37
 		//3-element to changed 3-element via set()
 		//Iterator concurrency tests
@@ -273,13 +279,13 @@ public class ListTester {
 	/**
 	* Scenario #5: [] -> addAtIndex(0, A) -> [A]
 	* @return [A] after addAtIndex(0, A)
-    	*/ 
-    	private IndexedUnsortedList<Integer> emptyList_addAtIndex0A_A() {
-        	IndexedUnsortedList<Integer> list = newList();
-        	list.add(0, ELEMENT_A);
-        	return list;
-    	}
-    	private Scenario<Integer> emptyList_addAtIndex0A_A = () -> emptyList_addAtIndex0A_A();
+	*/ 
+	private IndexedUnsortedList<Integer> emptyList_addAtIndex0A_A() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(0, ELEMENT_A);
+		return list;
+	}
+	private Scenario<Integer> emptyList_addAtIndex0A_A = () -> emptyList_addAtIndex0A_A();
 
 	/**
 	 * Scenario #7: [A] -> addToRear(B) -> [A,B]
@@ -363,13 +369,24 @@ public class ListTester {
 	/**
 	* Scenario #17: [A,B] -> addToFront(C) -> [C,A,B]
 	* @return [C,A,B] after addToFront(C)
-    	*/ 
-    	private IndexedUnsortedList<Integer> AB_addToFrontC_CAB() {
-        	IndexedUnsortedList<Integer> list = A_addToRearB_AB();
-        	list.addToFront(ELEMENT_C);
-        	return list;
-    	}
-    	private Scenario<Integer> AB_addToFrontC_CAB = () -> AB_addToFrontC_CAB();
+	*/ 
+	private IndexedUnsortedList<Integer> AB_addToFrontC_CAB() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB();
+		list.addToFront(ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_addToFrontC_CAB = () -> AB_addToFrontC_CAB();
+
+	/**
+	* Scenario #23: [A,B] -> addAtIndex(1, C) -> [A,C,B]
+	* @return [A,C,B] after addAtIndex(1, C)
+	*/ 
+	private IndexedUnsortedList<Integer> AB_add1C_ACB() {
+		IndexedUnsortedList<Integer> list = ABC_removeC_AB(); 
+		list.add(1, ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_add1C_ACB = () -> AB_add1C_ACB();
 
 	/**
 	* Scenario # 25: [A,B] -> removeFirst() -> [B]
@@ -434,6 +451,21 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_remove1_A = () -> AB_remove1_A();
+
+	/**
+	 * Scenario 33: [A,B,C] -> removeFirst() -> [B,C]
+	 * @return [B,C] after removeFirst()
+	 */
+
+	private IndexedUnsortedList<Integer> ABC_removeFirst_BC() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.add(ELEMENT_C);
+		list.removeFirst();
+		return list;
+	}
+	private Scenario<Integer> ABC_removeFirst_BC = () -> ABC_removeFirst_BC();
 
 	/**
 	* Scenario 37: [A,B,C] -> remove(C) -> [A,B]

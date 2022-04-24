@@ -281,27 +281,44 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         if (head.getNext() == null) {
             result = head.getElement();
             head = tail = null;
+            modCount++;
+            count--;
+        } else if (index == 0) {
+            result = head.getElement();
+            removeFirst();
+        } else if (index == count) {
+            result = tail.getElement();
+            removeLast();
         } else {
             Node<T> current = head;
             Node<T> previous = head;
 
             for (int i = 0; i < count; i++) {
                 if (i == index) {
-                    result = current.getElement();
-                    if (current.getNext() != null) {
-                        previous.setNext(current.getNext());
-                    }
                     break;
                 } else {
                     previous = current;
+                    current = current.getNext();
                 }
+            }
 
+            if (current == null) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            result = current.getElement();
+
+            if (previous != null) {
+                current = previous.getNext();
+                previous.setNext(current.getNext());
+                current.setNext(null);
+            } else {
                 current = current.getNext();
-            }   
-        }
+            }
 
-        modCount++;
-        count--;
+            modCount++;
+            count--;
+        }
 
         return result;
     }
