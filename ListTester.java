@@ -141,11 +141,13 @@ public class ListTester {
 		String STRING_A = "A";
 		String STRING_B = "B";
 		Integer[] LIST_AB = {ELEMENT_A, ELEMENT_B};
+		Integer[] LIST_AC = {ELEMENT_A, ELEMENT_C};
 		Integer[] LIST_BA = {ELEMENT_B, ELEMENT_A};
 		Integer[] LIST_BC = {ELEMENT_B, ELEMENT_C};
 		Integer[] LIST_CAB = {ELEMENT_C, ELEMENT_A, ELEMENT_B};
 		Integer[] LIST_ACB = {ELEMENT_A, ELEMENT_C, ELEMENT_B};
 		String STRING_AB = "AB";
+		String STRING_AC = "AC";
 		String STRING_BA = "BA";
 		String STRING_BC = "BC";
 		String STRING_CAB = "CAB";
@@ -185,6 +187,8 @@ public class ListTester {
 		//3-element to 2-element
 		testTwoElementList(ABC_removeFirst_BC, "ABC_removeFirst_BC", LIST_BC, STRING_BC); // Scenario #33
 		testTwoElementList(ABC_removeC_AB, "ABC_removeC_AB", LIST_AB, STRING_AB); // Scenario #37
+		testTwoElementList(ABC_iterRemoveAfterNext_BC, "ABC_iterRemoveAfterNext_BC", LIST_BC, STRING_BC); // Scenario #47
+		testTwoElementList(ABC_iterRemoveAfter2xNext_AC, "ABC_iterRemoveAfter2xNext_AC", LIST_AC, STRING_AC); // Scenario #48
 		//3-element to changed 3-element via set()
 		//Iterator concurrency tests
 		// test_IterConcurrency();
@@ -423,7 +427,7 @@ public class ListTester {
 		IndexedUnsortedList<Integer> list = newList();
 		list.addToFront(ELEMENT_A);
 		list.addToRear(ELEMENT_B);
-		list.remove(A);
+		list.remove(ELEMENT_A);
 		return list;
 	}
 	private Scenario<Integer>AB_remove_B = () -> AB_remove_B();
@@ -536,6 +540,39 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_iterRemoveAfter2xNext_A = () -> AB_iterRemoveAfter2xNext_A();
+
+	/**
+	 * Scenario 47: [A,B,C] -> iterator remove() after next() -> [B,C]
+	 * @return [B,C] after iterator remove() after next()
+	 */
+	private IndexedUnsortedList<Integer> ABC_iterRemoveAfterNext_BC() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.add(ELEMENT_C);
+		Iterator<Integer> iter = list.iterator();
+		iter.next();
+		iter.remove();
+		return list;
+	}
+	private Scenario<Integer> ABC_iterRemoveAfterNext_BC = () -> ABC_iterRemoveAfterNext_BC();
+
+	/**
+	 * Scenario 48: [A,B,C] -> iterator remove() after 2x next() -> [A,C]
+	 * @return [A,C] after iterator remove() after 2x next()
+	 */
+	private IndexedUnsortedList<Integer> ABC_iterRemoveAfter2xNext_AC() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.add(ELEMENT_C);
+		Iterator<Integer> iter = list.iterator();
+		iter.next();
+		iter.next();
+		iter.remove();
+		return list;
+	}
+	private Scenario<Integer> ABC_iterRemoveAfter2xNext_AC = () -> ABC_iterRemoveAfter2xNext_AC();
 	
 
 	/////////////////////////////////
