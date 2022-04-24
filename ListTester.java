@@ -575,7 +575,7 @@ public class ListTester {
 	private Scenario<Integer> ABC_iterRemoveAfter2xNext_AC = () -> ABC_iterRemoveAfter2xNext_AC();
 	
 	/**
-	 * Scenario 47: [A,B,C] -> iterator remove() after 3x next() -> [A,B]
+	 * Scenario 49: [A,B,C] -> iterator remove() after 3x next() -> [A,B]
 	 * @return [A,B] after iterator remove() after 3x next()
 	 */
 	private IndexedUnsortedList<Integer> ABC_iterRemoveAfter3xNext_AB() {
