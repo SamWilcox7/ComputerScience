@@ -250,7 +250,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
                 previous.setNext(current.getNext());
                 current.setNext(null);
             } else {
-                current = current.getNext();
+                head = head.getNext();
             }
         }
 
