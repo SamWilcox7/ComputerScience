@@ -176,8 +176,9 @@ public class ListTester {
 		//1-element to changed 1-element via set()
 		testSingleElementList(A_add0B_B, "A_add0B_B()", LIST_B, STRING_B); // Scenario #16
 		//2-element to 1-element
-		testSingleElementList(AB_remove0_B, "AB_remove0_B", LIST_B, STRING_B); //Scenario #29
-		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A); //Scenario #30
+		testSingleElementList(AB_removeA_B, "AB_removeA_B", LIST_B, STRING_B); // Scenario #27
+		testSingleElementList(AB_remove0_B, "AB_remove0_B", LIST_B, STRING_B); // Scenario #29
+		testSingleElementList(AB_remove1_A, "AB_remove1_A", LIST_A, STRING_A); // Scenario #30
 		testSingleElementList(AB_iterRemoveAfterNext_B, "AB_iterRemoveAfterNext_B", LIST_B, STRING_B); // Scenario #45
 		testSingleElementList(AB_iterRemoveAfter2xNext_A, "AB_iterRemoveAfter2xNext_A", LIST_A, STRING_A); // Scenario #46
 		//2-element to 3-element
@@ -189,6 +190,7 @@ public class ListTester {
 		testTwoElementList(ABC_removeC_AB, "ABC_removeC_AB", LIST_AB, STRING_AB); // Scenario #37
 		testTwoElementList(ABC_iterRemoveAfterNext_BC, "ABC_iterRemoveAfterNext_BC", LIST_BC, STRING_BC); // Scenario #47
 		testTwoElementList(ABC_iterRemoveAfter2xNext_AC, "ABC_iterRemoveAfter2xNext_AC", LIST_AC, STRING_AC); // Scenario #48
+		testTwoElementList(ABC_iterRemoveAfter3xNext_AB, "ABC_iterRemoveAfter3xNext_AB", LIST_AB, STRING_AB); // Scenario #49
 		//3-element to changed 3-element via set()
 		//Iterator concurrency tests
 		// test_IterConcurrency();
@@ -423,14 +425,12 @@ public class ListTester {
 	* @return [B] after remove(A)
 	*/
 	
-	private IndexedUnsortedList<Integer> AB_remove_B() {
-		IndexedUnsortedList<Integer> list = newList();
-		list.addToFront(ELEMENT_A);
-		list.addToRear(ELEMENT_B);
+	private IndexedUnsortedList<Integer> AB_removeA_B() {
+		IndexedUnsortedList<Integer> list = A_addToRearB_AB();
 		list.remove(ELEMENT_A);
 		return list;
 	}
-	private Scenario<Integer>AB_remove_B = () -> AB_remove_B();
+	private Scenario<Integer> AB_removeA_B = () -> AB_removeA_B();
 
 	/**
 	 * Scnario 28: [A,B] -> remove(B) -> [A]
@@ -590,10 +590,7 @@ public class ListTester {
 		iter.remove();
 		return list;
 	}
-	private Scenario<Integer> ABC_iterRemoveAfter3xNext_AB = () -> ABC_iterRemoveAfter3xNext_AB();
-	
-	
-	
+	private Scenario<Integer> ABC_iterRemoveAfter3xNext_AB = () -> ABC_iterRemoveAfter3xNext_AB();	
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
