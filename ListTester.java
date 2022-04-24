@@ -574,6 +574,26 @@ public class ListTester {
 	}
 	private Scenario<Integer> ABC_iterRemoveAfter2xNext_AC = () -> ABC_iterRemoveAfter2xNext_AC();
 	
+	/**
+	 * Scenario 47: [A,B,C] -> iterator remove() after 3x next() -> [A,B]
+	 * @return [A,B] after iterator remove() after 3x next()
+	 */
+	private IndexedUnsortedList<Integer> ABC_iterRemoveAfter3xNext_AB() {
+		IndexedUnsortedList<Integer> list = newList();
+		list.add(ELEMENT_A);
+		list.add(ELEMENT_B);
+		list.add(ELEMENT_C);
+		Iterator<Integer> iter = list.iterator();
+		iter.next();
+		iter.next();
+		iter.next();
+		iter.remove();
+		return list;
+	}
+	private Scenario<Integer> ABC_iterRemoveAfter3xNext_AB = () -> ABC_iterRemoveAfter3xNext_AB();
+	
+	
+	
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
