@@ -304,43 +304,46 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         }
 
         T result = null;
-        Node<T> current = head;
 
-        for (int i = 0; i < count; i++) {
-            if (i == index) {
-                break;
-            }
-
-            current = current.getNext();
-        }
-
-        result = current.getElement();
-
-        if (current.getPrevious() == null) {
-            if (current.getNext() == null) {
-                head = null;
-                tail = null;
-            } else {
-                removeFirst();
-            }
+        if (head.getNext() == null) {
+            result = head.getElement();
+            head = tail = null;
+            modCount++;
+            count--;
+        } else if (index == 0) {
+            result = removeFirst();
+        } else if (index == count - 1) {
+            result = removeLast();
         } else {
-            Node<T> previousNode = null;
-            Node<T> nextNode = null;
+            Node<T> current = head;
 
-            if (current.getNext() == null) {
-                previousNode = current.getPrevious();
-                nextNode = current;
-            } else {
-                previousNode = current.getPrevious();
-                nextNode = current.getNext();
+            for (int i = 0; i < count; i++) {
+                if (i == index) {
+                    break;
+                } else {
+                    current = current.getNext();
+                }
             }
 
-            previousNode.setNext(nextNode);
-            nextNode.setPrevious(previousNode);
-        }
+            result = current.getElement();
 
-        count--;
-        modCount++;
+            Node<T> previous = null;
+            Node<T> next = null;
+
+            if (current.getNext() == null) {
+                previous = current.getPrevious();
+                next = current;
+            } else {
+                previous = current.getPrevious();
+                next = current.getNext();
+            }
+
+            previous.setNext(next);
+            next.setPrevious(previous);
+
+            modCount++;
+            count--;
+        }
 
         return result;
     }
@@ -672,8 +675,8 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         /**
          * Shifts the cursor one element to the left
          */
-        private void shiftLeft() {
-            if (previousIndex > 0) {
+        public void shiftLeft() {
+            if (previousIndex > -1) {
                 previousIndex--;
                 nextIndex--;
             }
@@ -811,6 +814,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
          */
         @Override
         public int nextIndex() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
             return cursor.getNextIndex();
         }
 
@@ -820,6 +827,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
          */
         @Override
         public int previousIndex() {
+            if (listIterModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+
             return cursor.getPreviousIndex();
         }
 
@@ -835,14 +846,12 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
             switch (state) {
                 case NEXT:
                     outer.remove(cursor.getPreviousIndex());
-                    count--;
                     listIterModCount++;
                     cursor.shiftLeft();
                     state = ListIteratorState.NEITHER;
                     break;
                 case PREVIOUS:
                     outer.remove(cursor.getNextIndex());
-                    count--;
                     listIterModCount++;
                     state = ListIteratorState.NEITHER;
                     break;
@@ -888,23 +897,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
                 throw new ConcurrentModificationException();
             }
 
-            switch (state) {
-                case NEXT:
-                    outer.add(cursor.getPreviousIndex(), element);
-                    count++;
-                    listIterModCount++;
-                    cursor.shiftLeft();
-                    state = ListIteratorState.NEITHER;
-                    break;
-                case PREVIOUS:
-                    outer.add(cursor.getNextIndex(), element);
-                    count++;
-                    listIterModCount++;
-                    state = ListIteratorState.NEITHER;
-                    break;
-                default:
-                    break;
-            }
+            outer.add(cursor.getPreviousIndex() + 1, element);
         }
     }
     
