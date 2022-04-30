@@ -702,6 +702,128 @@ public class ListTester {
 		return list;
 	}
 	private Scenario<Integer> AB_listIterRemoveAfterPrevious_B = () -> AB_listIterRemoveAfterPrevious_B();
+	
+	/**
+	 * Scenario 76: [A,B] -> iterator set(C) after previous() returns B -> [A,C]
+	 * @return [A, C] after list iterator set(C) after previous() returns B
+	 */
+	
+	private IndexedUnsortedList<Integer> AB_iteratorSetCAfterPreviousReturnsB_AC() {
+		IndexedUnsortedList<Integer> list = ABC_iterRemoveAfter3xNext_AB();
+		ListIterator<Integer> iter = list.listIterator(2);
+        	iter.previous();
+        	iter.set(ELEMENT_C);
+		return list;
+	}
+	private Scenario<Integer> AB_iteratorSetCAfterPreviousReturnsB_AC = () -> AB_iteratorSetCAfterPreviousReturnsB_AC();
+	
+	/**
+	 * Scenario 77: [A,B,C] -> iterator set(D) after next() returns A -> [D,B,C]
+	 * @return [D,B,C] after list iterator set(D) after next() returns A
+	 */
+
+    	private IndexedUnsortedList<Integer> ABC_iteratorSetDAfterNextReturnsA_DBC() {
+		IndexedUnsortedList<Integer> list = newList();
+        	list.add(ELEMENT_A);
+        	list.add(ELEMENT_B);
+        	list.add(ELEMENT_C);
+		ListIterator<Integer> iter = list.listIterator();
+        	iter.next();
+        	iter.set(ELEMENT_D);
+
+		return list;
+	}
+	private Scenario<Integer> ABC_iteratorSetDAfterNextReturnsA_DBC = () -> ABC_iteratorSetDAfterNextReturnsA_DBC();
+	
+    /**
+	 * Scenario 78: [A,B,C] -> iterator set(D) after next() returns B -> [A,D,C]
+	 * @return [A,D,C] after list iterator set(D) after next() returns B
+	 */
+
+    	private IndexedUnsortedList<Integer> ABC_iteratorSetDAfterNextReturnsB_ADC() {
+		IndexedUnsortedList<Integer> list = newList();
+        	list.add(ELEMENT_A);
+       	 	list.add(ELEMENT_B);
+        	list.add(ELEMENT_C);
+		ListIterator<Integer> iter = list.listIterator(0);
+        	iter.next();
+        	iter.set(ELEMENT_D);
+
+		return list;
+	}
+	private Scenario<Integer> ABC_iteratorSetDAfterNextReturnsB_ADC = () -> ABC_iteratorSetDAfterNextReturnsB_ADC();
+
+    /**
+	 * Scenario 79: [A,B,C] -> iterator set(D) after next() returns C -> [A,B,D]
+	 * @return [A,B,D] after list iterator set(D) after next() returns C
+	 */
+
+    private IndexedUnsortedList<Integer> ABC_iteratorSetDAfterNextReturnsC_ABD() {
+		IndexedUnsortedList<Integer> list = newList();
+        	list.add(ELEMENT_A);
+        	list.add(ELEMENT_B);
+        	list.add(ELEMENT_C);
+		ListIterator<Integer> iter = list.listIterator(1);
+        	iter.next();
+        	iter.set(ELEMENT_D);
+
+		return list;
+	}
+	private Scenario<Integer> ABC_iteratorSetDAfterNextReturnsC_ABD = () -> ABC_iteratorSetDAfterNextReturnsC_ABD();
+
+    /**
+	 * Scenario 80: [A,B,C] -> iterator set(D) after previous() returns A -> [D,B,C]
+	 * @return [D,B,C] after list iterator set(D) after previous() returns A
+	 */
+
+    private IndexedUnsortedList<Integer> ABC_iteratorSetDAfterPreviousReturnsA_DBC() {
+		IndexedUnsortedList<Integer> list = newList();
+        	list.add(ELEMENT_A);
+        	list.add(ELEMENT_B);
+        	list.add(ELEMENT_C);
+		ListIterator<Integer> iter = list.listIterator(1);
+        	iter.previous();
+        	iter.set(ELEMENT_D);
+
+		return list;
+	}
+	private Scenario<Integer> ABC_iteratorSetDAfterPreviousReturnsA_DBC = () -> ABC_iteratorSetDAfterPreviousReturnsA_DBC();
+
+    /**
+	 * Scenario 81:  [A,B,C] -> iterator set(D) after previous() returns B -> [A,D,C]
+	 * @return [D,B,C] after list iterator set(D) after previous() returns B
+	 */
+
+    private IndexedUnsortedList<Integer> ABC_iteratorSetDAfterPreviousReturnsB_ADC() {
+		IndexedUnsortedList<Integer> list = newList();
+        	list.add(ELEMENT_A);
+        	list.add(ELEMENT_B);
+		 list.add(ELEMENT_C);
+		ListIterator<Integer> iter = list.listIterator(2);
+        	iter.previous();
+        	iter.set(ELEMENT_D);
+
+		return list;
+	}
+	private Scenario<Integer> ABC_iteratorSetDAfterPreviousReturnsB_ADC = () -> ABC_iteratorSetDAfterPreviousReturnsB_ADC();
+
+    /**
+	 * Scenario 82:  [A,B,C] -> iterator set(D) after previous() returns C -> [A,B,D]
+	 * @return [A,B,D] after list iterator set(D) after previous() returns C
+	 */
+
+    private IndexedUnsortedList<Integer> ABC_iteratorSetDAfterPreviousReturnsC_ABD() {
+		IndexedUnsortedList<Integer> list = newList();
+        	list.add(ELEMENT_A);
+        	list.add(ELEMENT_B);
+        	list.add(ELEMENT_C);
+		ListIterator<Integer> iter = list.listIterator(3);
+        	iter.previous();
+        	iter.set(ELEMENT_D);
+
+		return list;
+	}
+	private Scenario<Integer> ABC_iteratorSetDAfterPreviousReturnsC_ABD = () -> ABC_iteratorSetDAfterPreviousReturnsC_ABD();
 
 	/////////////////////////////////
 	//XXX Tests for 0-element list
