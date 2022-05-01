@@ -628,9 +628,9 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     private enum ListIteratorState { PREVIOUS, NEXT, NEITHER }
 
     /**
-     * Array Cursor class to help assist tracking the current position in the list
+     * List Cursor class to help assist tracking the current position in the list
      */
-    private class ArrayCursor {
+    private class ListCursor {
         
         /**
          * Previous and next index values
@@ -641,7 +641,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
         /**
          * Class constructor
          */
-        public ArrayCursor() {
+        public ListCursor() {
             previousIndex = -1;
             nextIndex = 0;
         }
@@ -689,10 +689,10 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
     private class IUDoubleLinkedListListIterator implements ListIterator<T> {
 
         /**
-         * Instance of array cursor
-         * @var ArrayCursor
+         * Instance of list cursor
+         * @var ListCursor
          */
-        private ArrayCursor cursor;
+        private ListCursor cursor;
 
         /**
          * List iterator modification counter
@@ -726,7 +726,7 @@ public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T> {
          * @param outer         instance to the parent "outer" class
          */
         public IUDoubleLinkedListListIterator(int startingIndex, IUDoubleLinkedList<T> outer) {
-            cursor = new ArrayCursor();
+            cursor = new ListCursor();
             listIterModCount = modCount;
             state = ListIteratorState.NEITHER;
             this.outer = outer;
